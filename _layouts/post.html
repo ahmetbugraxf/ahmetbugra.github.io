@@ -1,0 +1,55 @@
+---
+layout: default
+---
+
+<article class="post-full">
+  <header class="post-header">
+    <div class="post-meta">
+      <time datetime="{{ page.date | date_to_xmlschema }}">
+        {{ page.date | date: "%d %B %Y" }}
+      </time>
+      {% if page.categories.size > 0 %}
+        <span class="post-categories">
+          {% for category in page.categories %}
+            <span class="category-tag">{{ category }}</span>
+          {% endfor %}
+        </span>
+      {% endif %}
+    </div>
+    <h1 class="post-title">{{ page.title }}</h1>
+    {% if page.excerpt %}
+      <p class="post-excerpt">{{ page.excerpt | strip_html }}</p>
+    {% endif %}
+  </header>
+  
+  <div class="post-content prose">
+    {{ content }}
+  </div>
+  
+  <footer class="post-footer">
+    {% if page.tags.size > 0 %}
+      <div class="post-tags">
+        <span class="tags-label">Etiketler:</span>
+        {% for tag in page.tags %}
+          <span class="tag">{{ tag }}</span>
+        {% endfor %}
+      </div>
+    {% endif %}
+    
+    <div class="post-nav">
+      {% if page.previous %}
+        <a href="{{ page.previous.url }}" class="post-nav-link prev">
+          <span class="nav-label">← Önceki</span>
+          <span class="nav-title">{{ page.previous.title }}</span>
+        </a>
+      {% endif %}
+      {% if page.next %}
+        <a href="{{ page.next.url }}" class="post-nav-link next">
+          <span class="nav-label">Sonraki →</span>
+          <span class="nav-title">{{ page.next.title }}</span>
+        </a>
+      {% endif %}
+    </div>
+  </footer>
+</article>
+

@@ -1,0 +1,30 @@
+<header class="site-header">
+  <nav class="nav-container">
+    <a href="{{ '/' | relative_url }}" class="site-logo">
+      <span class="logo-text">{{ site.title }}</span>
+    </a>
+    
+    <button class="nav-toggle" aria-label="Menüyü aç/kapat">
+      <span class="hamburger"></span>
+    </button>
+    
+    <ul class="nav-menu">
+      <li class="nav-item">
+        <a href="{{ '/' | relative_url }}" class="nav-link {% if page.url == '/' %}active{% endif %}">Ana Sayfa</a>
+      </li>
+      <li class="nav-item">
+        <a href="{{ '/about' | relative_url }}" class="nav-link {% if page.url == '/about.html' %}active{% endif %}">Hakkımda</a>
+      </li>
+      <li class="nav-item">
+        <a href="{{ '/blog' | relative_url }}" class="nav-link {% if page.url contains '/blog' %}active{% endif %}">Blog</a>
+      </li>
+      <li class="nav-item">
+        <a href="{{ '/projects' | relative_url }}" class="nav-link {% if page.url == '/projects.html' %}active{% endif %}">Projeler</a>
+      </li>
+      <li class="nav-item">
+        <a href="{{ '/talks' | relative_url }}" class="nav-link {% if page.url == '/talks.html' %}active{% endif %}">Konuşmalar</a>
+      </li>
+    </ul>
+  </nav>
+</header>
+

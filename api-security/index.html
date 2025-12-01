@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REST API Güvenlik Testleri | Ahmet Buğra</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="noise-overlay"></div>
+    
+    <header class="header">
+        <div class="container">
+            <a href="/" class="logo">
+                <span class="logo-bracket">[</span>
+                <span class="logo-text">ahmetbugra</span>
+                <span class="logo-bracket">]</span>
+            </a>
+            <nav class="nav">
+                <a href="/" class="nav-link">Blog</a>
+                <a href="/#about" class="nav-link">Hakkımda</a>
+                <a href="https://github.com/ahmetbugra" class="nav-link" target="_blank">GitHub</a>
+                <button class="theme-toggle" id="themeToggle" aria-label="Tema Değiştir">
+                    <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                    <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </button>
+            </nav>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menü">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <nav class="mobile-nav" id="mobileNav">
+        <a href="/" class="nav-link">Blog</a>
+        <a href="/#about" class="nav-link">Hakkımda</a>
+        <a href="https://github.com/ahmetbugra" class="nav-link" target="_blank">GitHub</a>
+    </nav>
+
+    <main class="main">
+        <article>
+            <header class="post-header">
+                <div class="container">
+                    <a href="/" class="back-link">
+                        <span class="arrow">←</span> Tüm yazılar
+                    </a>
+                    <div class="post-header-meta">
+                        <time datetime="2024-11-18">18 Kasım 2024</time>
+                        <span class="post-header-category">API Security</span>
+                    </div>
+                    <h1 class="post-header-title">REST API Güvenlik Testleri</h1>
+                    <p class="post-header-excerpt">
+                        Modern web uygulamalarında REST API güvenlik testleri, OWASP API Security Top 10 ve pratik test senaryoları.
+                    </p>
+                </div>
+            </header>
+
+            <div class="post-content">
+                <div class="container">
+                    <h2>OWASP API Security Top 10</h2>
+                    <p>
+                        OWASP, API güvenliği için en kritik 10 güvenlik riskini tanımlamıştır. Bu riskleri anlamak, etkili güvenlik testleri yapmak için önemlidir.
+                    </p>
+
+                    <h3>API1: Broken Object Level Authorization (BOLA)</h3>
+                    <p>
+                        En yaygın API güvenlik açığıdır. Kullanıcılar, yetkili olmadıkları kaynaklara erişebilir.
+                    </p>
+
+                    <pre><code># Normal istek
+GET /api/users/123/orders HTTP/1.1
+Authorization: Bearer user123_token
+
+# BOLA test - başka kullanıcının verilerine erişim
+GET /api/users/456/orders HTTP/1.1
+Authorization: Bearer user123_token  # Aynı token!</code></pre>
+
+                    <h3>API2: Broken Authentication</h3>
+                    <p>
+                        Zayıf veya hatalı kimlik doğrulama mekanizmaları:
+                    </p>
+
+                    <pre><code># JWT token analizi
+# jwt.io ile token decode edilebilir
+
+# Zayıf secret key testi
+python3 jwt-cracker.py -t "eyJhbGciOiJIUzI1NiIs..."
+
+# None algorithm bypass
+{
+  "alg": "none",
+  "typ": "JWT"
+}</code></pre>
+
+                    <h3>API3: Broken Object Property Level Authorization</h3>
+                    <p>
+                        Kullanıcılar, nesne özelliklerini yetkisiz olarak okuyabilir veya değiştirebilir:
+                    </p>
+
+                    <pre><code># Mass Assignment örneği
+PUT /api/users/123 HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "Normal User",
+  "email": "user@example.com",
+  "role": "admin",        // Yetkisiz alan!
+  "isVerified": true      // Yetkisiz alan!
+}</code></pre>
+
+                    <h3>API4: Unrestricted Resource Consumption</h3>
+                    <p>
+                        Rate limiting eksikliği veya yetersiz kaynak sınırlamaları:
+                    </p>
+
+                    <pre><code># Rate limit testi
+for i in {1..1000}; do
+  curl -s "https://api.example.com/search?q=test" &
+done
+
+# Büyük payload testi
+curl -X POST https://api.example.com/upload \
+  -d @large_file.json</code></pre>
+
+                    <h2>Test Araçları</h2>
+
+                    <h3>Burp Suite</h3>
+                    <p>
+                        API güvenlik testleri için en kapsamlı araç:
+                    </p>
+                    <ul>
+                        <li><strong>Proxy:</strong> Trafik yakalama ve modifikasyon</li>
+                        <li><strong>Intruder:</strong> Otomatik fuzzing</li>
+                        <li><strong>Repeater:</strong> Manuel test</li>
+                        <li><strong>Scanner:</strong> Otomatik zafiyet tarama</li>
+                    </ul>
+
+                    <h3>Postman</h3>
+                    <p>
+                        API test koleksiyonları ve otomasyon için:
+                    </p>
+
+                    <pre><code>// Postman test script örneği
+pm.test("Status code is 200", function () {
+    pm.response.to.have.status(200);
+});
+
+pm.test("Response has user data", function () {
+    var jsonData = pm.response.json();
+    pm.expect(jsonData).to.have.property('user');
+});
+
+// Authorization bypass testi
+pm.test("Cannot access other user data", function () {
+    pm.response.to.have.status(403);
+});</code></pre>
+
+                    <h3>OWASP ZAP</h3>
+                    <p>
+                        Açık kaynak web uygulama güvenlik tarayıcısı:
+                    </p>
+
+                    <pre><code># ZAP API scan
+docker run -t owasp/zap2docker-stable zap-api-scan.py \
+  -t https://api.example.com/openapi.json \
+  -f openapi</code></pre>
+
+                    <h2>Test Senaryoları</h2>
+
+                    <h3>Authentication Tests</h3>
+                    <pre><code># 1. Brute force
+hydra -l admin -P passwords.txt api.example.com https-post-form \
+  "/api/login:username=^USER^&password=^PASS^:Invalid"
+
+# 2. Token leakage
+# Referrer header'da token sızıntısı kontrolü
+
+# 3. Token expiration
+# Süresi dolmuş token kullanımı</code></pre>
+
+                    <h3>Authorization Tests</h3>
+                    <pre><code># 1. Horizontal privilege escalation
+# Aynı rol seviyesinde başka kullanıcı verilerine erişim
+
+# 2. Vertical privilege escalation  
+# Admin endpoint'lerine normal kullanıcı ile erişim
+GET /api/admin/users HTTP/1.1
+Authorization: Bearer regular_user_token
+
+# 3. Function level access control
+# Gizli admin fonksiyonları
+POST /api/admin/deleteUser HTTP/1.1</code></pre>
+
+                    <h3>Input Validation Tests</h3>
+                    <pre><code># SQL Injection
+GET /api/users?id=1' OR '1'='1
+
+# NoSQL Injection
+POST /api/login
+{"username": {"$gt": ""}, "password": {"$gt": ""}}
+
+# Command Injection
+GET /api/ping?host=127.0.0.1;cat /etc/passwd
+
+# SSRF
+GET /api/fetch?url=http://169.254.169.254/latest/meta-data/</code></pre>
+
+                    <h2>API Fuzzing</h2>
+                    <p>
+                        Otomatik API fuzzing için araçlar ve teknikler:
+                    </p>
+
+                    <pre><code># ffuf ile endpoint discovery
+ffuf -u https://api.example.com/FUZZ -w wordlist.txt
+
+# Parameter fuzzing
+ffuf -u "https://api.example.com/api/users?FUZZ=test" \
+  -w params.txt
+
+# wfuzz ile
+wfuzz -c -z file,wordlist.txt \
+  --hc 404 https://api.example.com/api/FUZZ</code></pre>
+
+                    <h2>Raporlama</h2>
+                    <p>
+                        Güvenlik testlerinden sonra kapsamlı bir rapor hazırlanmalıdır:
+                    </p>
+                    <ul>
+                        <li><strong>Executive Summary:</strong> Üst yönetim için özet</li>
+                        <li><strong>Methodology:</strong> Kullanılan test metodolojisi</li>
+                        <li><strong>Findings:</strong> Bulunan güvenlik açıkları</li>
+                        <li><strong>Risk Rating:</strong> CVSS skorları</li>
+                        <li><strong>Recommendations:</strong> Düzeltme önerileri</li>
+                        <li><strong>Evidence:</strong> Kanıt ekran görüntüleri</li>
+                    </ul>
+
+                    <blockquote>
+                        <p>
+                            API güvenlik testleri yaparken her zaman yazılı izin alın ve test kapsamını net olarak belirleyin.
+                        </p>
+                    </blockquote>
+                </div>
+            </div>
+        </article>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p class="footer-text">
+                <span class="footer-year">© 2024</span> 
+                <span class="footer-separator">|</span>
+                <span>Ahmet Buğra</span>
+                <span class="footer-separator">|</span>
+                <span class="footer-made">Made with <span class="heart">♥</span> and caffeine</span>
+            </p>
+        </div>
+    </footer>
+
+    <script src="../script.js"></script>
+</body>
+</html>
+
